@@ -28,12 +28,12 @@ maintainers:
     email: zhangzhenghao@hotmail.com
 
 dependencies:
-  - name: common
-    repository: https://charts.bitnami.com/bitnami
-    tags:
-      - bitnami-common
-    version: 2.x.x
-  - name: mongodb
-    condition: mongodb.enabled
-    version: 18.x.x
-    repository: "https://charts.bitnami.com/bitnami"
+  # - name: common
+  #   repository: https://charts.bitnami.com/bitnami
+  #   tags:
+  #     - bitnami-common
+  #   version: 2.x.x
+  # - name: mongodb
+  #   condition: mongodb.enabled
+  #   version: 18.x.x
+  #   repository: "https://charts.bitnami.com/bitnami"
