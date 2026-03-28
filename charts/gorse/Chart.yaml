@@ -29,7 +29,7 @@ maintainers:
 
 dependencies:
   - name: common
-    repository: https://ghcr.io/cloudpirates-io/helm-charts
+    repository: oci:/ghcr.io/cloudpirates-io/helm-charts
     tags:
       - cloudpirates-common
     version: 2.x.x
