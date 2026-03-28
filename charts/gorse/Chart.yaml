@@ -28,11 +28,11 @@ maintainers:
     email: zhangzhenghao@hotmail.com
 
 dependencies:
-  # - name: common
-  #   repository: https://charts.bitnami.com/bitnami
-  #   tags:
-  #     - bitnami-common
-  #   version: 2.x.x
+  - name: common
+    repository: https://ghcr.io/cloudpirates-io/helm-charts
+    tags:
+      - cloudpirates-common
+    version: 2.x.x
   # - name: mongodb
   #   condition: mongodb.enabled
   #   version: 18.x.x
