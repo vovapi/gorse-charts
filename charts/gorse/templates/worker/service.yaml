@@ -4,18 +4,18 @@ kind: Service
 metadata:
   name: {{ include "gorse.worker.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  labels: {{- include "cloudpirates.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: worker
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if or .Values.worker.service.annotations .Values.commonAnnotations }}
   annotations:
     {{- if .Values.worker.service.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.worker.service.annotations "context" $ ) | nindent 4 }}
+    {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.worker.service.annotations "context" $ ) | nindent 4 }}
     {{- end }}
     {{- if .Values.commonAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
   {{- end }}
 spec:
@@ -23,7 +23,7 @@ spec:
   {{- if or (eq .Values.worker.service.type "LoadBalancer") (eq .Values.worker.service.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.worker.service.externalTrafficPolicy | quote }}
   {{- end }}
-  {{- if (semverCompare ">=1.22-0" (include "common.capabilities.kubeVersion" .)) }}
+  {{- if (semverCompare ">=1.22-0" (include "cloudpirates.capabilities.kubeVersion" .)) }}
   internalTrafficPolicy: {{ .Values.worker.service.internalTrafficPolicy }}
   {{- end }}
   {{- if and (eq .Values.worker.service.type "LoadBalancer") (not (empty .Values.worker.service.loadBalancerIP)) }}
@@ -39,7 +39,7 @@ spec:
   sessionAffinity: {{ .Values.worker.service.sessionAffinity }}
   {{- end }}
   {{- if .Values.worker.service.sessionAffinityConfig }}
-  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values.worker.service.sessionAffinityConfig "context" $) | nindent 4 }}
+  sessionAffinityConfig: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.worker.service.sessionAffinityConfig "context" $) | nindent 4 }}
   {{- end }}
   ports:
     - name: http
@@ -51,6 +51,6 @@ spec:
       {{- else if eq .Values.worker.service.type "ClusterIP" }}
       nodePort: null
       {{- end }}
-  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+  selector: {{- include "cloudpirates.labels.matchLabels" . | nindent 4 }}
     app.kubernetes.io/component: worker
 {{- end }}

@@ -23,10 +23,10 @@ global:
 ## @param kubeVersion Override Kubernetes version
 ##
 kubeVersion: ""
-## @param nameOverride String to partially override common.names.fullname
+## @param nameOverride String to partially override cloudpirates.names.fullname
 ##
 nameOverride: ""
-## @param fullnameOverride String to fully override common.names.fullname
+## @param fullnameOverride String to fully override cloudpirates.names.fullname
 ##
 fullnameOverride: ""
 ## @param commonLabels Labels to add to all deployed objects

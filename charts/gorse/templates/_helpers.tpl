@@ -5,19 +5,19 @@ Create a default fully qualified mongodb name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "gorse.mongodb.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "mongodb" "chartValues" .Values.mongodb "context" $) -}}
+{{- include "cloudpirates.names.dependency.fullname" (dict "chartName" "mongodb" "chartValues" .Values.mongodb "context" $) -}}
 {{- end -}}
 
 {{- define "gorse.master.fullname" -}}
-{{ printf "%s-master" (include "common.names.fullname" .) }}
+{{ printf "%s-master" (include "cloudpirates.names.fullname" .) }}
 {{- end -}}
 
 {{- define "gorse.server.fullname" -}}
-{{ printf "%s-server" (include "common.names.fullname" .) }}
+{{ printf "%s-server" (include "cloudpirates.names.fullname" .) }}
 {{- end -}}
 
 {{- define "gorse.worker.fullname" -}}
-{{ printf "%s-worker" (include "common.names.fullname" .) }}
+{{ printf "%s-worker" (include "cloudpirates.names.fullname" .) }}
 {{- end -}}
 
 {{/*
@@ -60,7 +60,7 @@ Return Gorse password
 {{- if not (empty .Values.gorse.dashboard.password) }}
     {{- .Values.gorse.dashboard.password -}}
 {{- else -}}
-    {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "dashboard-password") -}}
+    {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "cloudpirates.names.fullname" .) "Length" 10 "Key" "dashboard-password") -}}
 {{- end -}}
 {{- end -}}
 
@@ -71,7 +71,7 @@ Return Gorse API Secret
 {{- if not (empty .Values.gorse.api.key) }}
     {{- .Values.gorse.api.key -}}
 {{- else -}}
-    {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 32 "Key" "api-key") -}}
+    {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "cloudpirates.names.fullname" .) "Length" 32 "Key" "api-key") -}}
 {{- end -}}
 {{- end -}}
 
@@ -82,7 +82,7 @@ Return OpenAI Auth Token
 {{- if not (empty .Values.gorse.openai.authToken) -}}
     {{- .Values.gorse.openai.authToken -}}
 {{- else -}}
-    {{- $secretValue := include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 32 "Key" "openai-auth-token") -}}
+    {{- $secretValue := include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "cloudpirates.names.fullname" .) "Length" 32 "Key" "openai-auth-token") -}}
     {{- $secretValue | default "" -}}
 {{- end -}}
 {{- end -}}
@@ -146,9 +146,9 @@ Return the MongoDB Secret Name
         {{- printf "%s" (include "gorse.mongodb.fullname" .) -}}
     {{- end -}}
 {{- else if .Values.externalDatabase.existingSecret -}}
-    {{- include "common.tplvalues.render" (dict "value" .Values.externalDatabase.existingSecret "context" $) -}}
+    {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.externalDatabase.existingSecret "context" $) -}}
 {{- else -}}
-    {{- printf "%s-externaldb" (include "common.names.fullname" .) -}}
+    {{- printf "%s-externaldb" (include "cloudpirates.names.fullname" .) -}}
 {{- end -}}
 {{- end -}}
 

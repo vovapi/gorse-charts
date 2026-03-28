@@ -2,9 +2,9 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ printf "data-%s-master" (include "common.names.fullname" .) }}
+  name: {{ printf "data-%s-master" (include "cloudpirates.names.fullname" .) }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "common.labels.matchLabels" . | nindent 4 }}
+  labels: {{- include "cloudpirates.labels.matchLabels" . | nindent 4 }}
     app.kubernetes.io/component: master
   {{- if .Values.master.persistence.annotations }}
   annotations: {{- toYaml .Values.master.persistence.annotations | nindent 4 }}
@@ -18,10 +18,10 @@ spec:
     requests:
       storage: {{ .Values.master.persistence.size | quote }}
   {{- if .Values.master.persistence.selector }}
-  selector: {{- include "common.tplvalues.render" (dict "value" .Values.master.persistence.selector "context" $) | nindent 4 }}
+  selector: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.master.persistence.selector "context" $) | nindent 4 }}
   {{- end }}
   {{- if .Values.master.persistence.dataSource }}
-  dataSource: {{- include "common.tplvalues.render" (dict "value" .Values.master.persistence.dataSource "context" $) | nindent 4 }}
+  dataSource: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.master.persistence.dataSource "context" $) | nindent 4 }}
   {{- end }}
-  {{- include "common.storage.class" (dict "persistence" .Values.master.persistence "global" .Values.global) | nindent 2 }}
+  {{- include "cloudpirates.storage.class" (dict "persistence" .Values.master.persistence "global" .Values.global) | nindent 2 }}
 {{- end }}

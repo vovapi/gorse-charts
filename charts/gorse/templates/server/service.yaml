@@ -3,18 +3,18 @@ kind: Service
 metadata:
   name: {{ include "gorse.server.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  labels: {{- include "cloudpirates.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: server
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if or .Values.server.service.annotations .Values.commonAnnotations }}
   annotations:
     {{- if .Values.server.service.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.server.service.annotations "context" $ ) | nindent 4 }}
+    {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.server.service.annotations "context" $ ) | nindent 4 }}
     {{- end }}
     {{- if .Values.commonAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
   {{- end }}
 spec:
@@ -22,7 +22,7 @@ spec:
   {{- if or (eq .Values.server.service.type "LoadBalancer") (eq .Values.server.service.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.server.service.externalTrafficPolicy | quote }}
   {{- end }}
-  {{- if (semverCompare ">=1.22-0" (include "common.capabilities.kubeVersion" .)) }}
+  {{- if (semverCompare ">=1.22-0" (include "cloudpirates.capabilities.kubeVersion" .)) }}
   internalTrafficPolicy: {{ .Values.server.service.internalTrafficPolicy }}
   {{- end }}
   {{- if and (eq .Values.server.service.type "LoadBalancer") (not (empty .Values.server.service.loadBalancerIP)) }}
@@ -38,7 +38,7 @@ spec:
   sessionAffinity: {{ .Values.server.service.sessionAffinity }}
   {{- end }}
   {{- if .Values.server.service.sessionAffinityConfig }}
-  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values.server.service.sessionAffinityConfig "context" $) | nindent 4 }}
+  sessionAffinityConfig: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.server.service.sessionAffinityConfig "context" $) | nindent 4 }}
   {{- end }}
   ports:
     - name: http
@@ -50,5 +50,5 @@ spec:
       {{- else if eq .Values.server.service.type "ClusterIP" }}
       nodePort: null
       {{- end }}
-  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+  selector: {{- include "cloudpirates.labels.matchLabels" . | nindent 4 }}
     app.kubernetes.io/component: server

@@ -3,21 +3,21 @@ kind: {{ .Values.master.kind }}
 metadata:
   name: {{ include "gorse.master.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  labels: {{- include "cloudpirates.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: master
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  annotations: {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
   replicas: 1
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "cloudpirates.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: master
   {{- if (eq .Values.master.kind "StatefulSet") }}
-  serviceName: {{ printf "%s-master" (include "common.names.fullname" .) }}
+  serviceName: {{ printf "%s-master" (include "cloudpirates.names.fullname" .) }}
   {{- end }}
   {{- if .Values.master.updateStrategy }}
   {{- if (eq .Values.master.kind "Deployment") }}
@@ -28,29 +28,29 @@ spec:
   {{- end }}
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "cloudpirates.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: master
         {{- if .Values.master.podLabels }}
-        {{- include "common.tplvalues.render" ( dict "value" .Values.master.podLabels "context" $ ) | nindent 8 }}
+        {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.master.podLabels "context" $ ) | nindent 8 }}
         {{- end }}
       annotations:
         {{- if .Values.master.podAnnotations }}
-        {{- include "common.tplvalues.render" ( dict "value" .Values.master.podAnnotations "context" $ ) | nindent 8 }}
+        {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.master.podAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.master.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.master.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.master.nodeSelector "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.master.affinity }}
-      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.master.affinity "context" $) | nindent 8 }}
+      affinity: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.master.affinity "context" $) | nindent 8 }}
       {{- else }}
       affinity:
-        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.master.podAffinityPreset "component" "master" "context" $) | nindent 10 }}
-        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.master.podAntiAffinityPreset "component" "master" "context" $) | nindent 10 }}
-        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.master.nodeAffinityPreset.type "key" .Values.master.nodeAffinityPreset.key "values" .Values.master.nodeAffinityPreset.values) | nindent 10 }}
+        podAffinity: {{- include "cloudpirates.affinities.pods" (dict "type" .Values.master.podAffinityPreset "component" "master" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "cloudpirates.affinities.pods" (dict "type" .Values.master.podAntiAffinityPreset "component" "master" "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "cloudpirates.affinities.nodes" (dict "type" .Values.master.nodeAffinityPreset.type "key" .Values.master.nodeAffinityPreset.key "values" .Values.master.nodeAffinityPreset.values) | nindent 10 }}
       {{- end }}
       {{- if .Values.master.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.master.tolerations "context" $) | nindent 8 }}
+      tolerations: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.master.tolerations "context" $) | nindent 8 }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}-master
@@ -71,24 +71,24 @@ spec:
             - name: GORSE_SERVER_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "common.names.fullname" . }}
+                  name: {{ template "cloudpirates.names.fullname" . }}
                   key: api-key
             - name: GORSE_DASHBOARD_USER_NAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "common.names.fullname" . }}
+                  name: {{ template "cloudpirates.names.fullname" . }}
                   key: dashboard-username
             - name: GORSE_DASHBOARD_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "common.names.fullname" . }}
+                  name: {{ template "cloudpirates.names.fullname" . }}
                   key: dashboard-password
             - name: GORSE_DASHBOARD_AUTH_SERVER
               value: {{ .Values.gorse.dashboard.authServer }}
             - name: GORSE_OPENAI_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "common.names.fullname" . }}
+                  name: {{ template "cloudpirates.names.fullname" . }}
                   key: openai-auth-token
             - name: GORSE_MASTER_PORT
               value: "{{ .Values.master.service.ports.grpc }}"
@@ -147,7 +147,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ printf "%s" (include "common.names.fullname" .) }}
+            name: {{ printf "%s" (include "cloudpirates.names.fullname" .) }}
   {{- if not .Values.master.persistence.enabled }}
         - name: data
           {{- if .Values.master.persistence.medium }}
@@ -163,12 +163,12 @@ spec:
   {{- else if (eq .Values.master.kind "Deployment") }}
         - name: data
           persistentVolumeClaim:
-            claimName: {{ printf "data-%s-master" (include "common.names.fullname" .) }}
+            claimName: {{ printf "data-%s-master" (include "cloudpirates.names.fullname" .) }}
   {{- else }}
   volumeClaimTemplates:
     - metadata:
         name: data
-        labels: {{- include "common.labels.matchLabels" . | nindent 10 }}
+        labels: {{- include "cloudpirates.labels.matchLabels" . | nindent 10 }}
           app.kubernetes.io/component: master
         {{- if .Values.master.persistence.annotations }}
         annotations: {{- toYaml .Values.master.persistence.annotations | nindent 10 }}
@@ -182,10 +182,10 @@ spec:
           requests:
             storage: {{ .Values.master.persistence.size | quote }}
         {{- if .Values.master.persistence.selector }}
-        selector: {{- include "common.tplvalues.render" (dict "value" .Values.master.persistence.selector "context" $) | nindent 10 }}
+        selector: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.master.persistence.selector "context" $) | nindent 10 }}
         {{- end }}
         {{- if .Values.master.persistence.dataSource }}
-        dataSource: {{- include "common.tplvalues.render" (dict "value" .Values.master.persistence.dataSource "context" $) | nindent 10 }}
+        dataSource: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.master.persistence.dataSource "context" $) | nindent 10 }}
         {{- end }}
-        {{- include "common.storage.class" (dict "persistence" .Values.master.persistence "global" .Values.global) | nindent 8 }}
+        {{- include "cloudpirates.storage.class" (dict "persistence" .Values.master.persistence "global" .Values.global) | nindent 8 }}
   {{- end }}
