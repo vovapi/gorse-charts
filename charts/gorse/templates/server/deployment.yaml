@@ -3,7 +3,7 @@ kind: ReplicaSet
 metadata:
   name: {{ include "gorse.server.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "cloudpirates.labels.standard" . | nindent 4 }}
+  labels: {{- include "cloudpirates.labels" . | nindent 4 }}
     app.kubernetes.io/component: sever
     {{- if .Values.commonLabels }}
     {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
@@ -16,7 +16,7 @@ spec:
   replicas: {{ .Values.server.replicaCount }}
   {{- end }}
   selector:
-    matchLabels: {{- include "cloudpirates.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "cloudpirates.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: server
   {{- if .Values.server.updateStrategy }}
   {{- if (eq .Values.server.kind "Deployment") }}
@@ -27,7 +27,7 @@ spec:
   {{- end }}
   template:
     metadata:
-      labels: {{- include "cloudpirates.labels.standard" . | nindent 8 }}
+      labels: {{- include "cloudpirates.labels" . | nindent 8 }}
         app.kubernetes.io/component: server
         {{- if .Values.server.podLabels }}
         {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.server.podLabels "context" $ ) | nindent 8 }}
@@ -44,9 +44,9 @@ spec:
       affinity: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.server.affinity "context" $) | nindent 8 }}
       {{- else }}
       affinity:
-        podAffinity: {{- include "cloudpirates.affinities.pods" (dict "type" .Values.server.podAffinityPreset "component" "server" "context" $) | nindent 10 }}
-        podAntiAffinity: {{- include "cloudpirates.affinities.pods" (dict "type" .Values.server.podAntiAffinityPreset "component" "server" "context" $) | nindent 10 }}
-        nodeAffinity: {{- include "cloudpirates.affinities.nodes" (dict "type" .Values.server.nodeAffinityPreset.type "key" .Values.server.nodeAffinityPreset.key "values" .Values.server.nodeAffinityPreset.values) | nindent 10 }}
+        podAffinity: {{- include "gorse.affinities.pods" (dict "type" .Values.server.podAffinityPreset "component" "server" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "gorse.affinities.pods" (dict "type" .Values.server.podAntiAffinityPreset "component" "server" "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "gorse.affinities.nodes" (dict "type" .Values.server.nodeAffinityPreset.type "key" .Values.server.nodeAffinityPreset.key "values" .Values.server.nodeAffinityPreset.values) | nindent 10 }}
       {{- end }}
       {{- if .Values.server.tolerations }}
       tolerations: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.server.tolerations "context" $) | nindent 8 }}
@@ -62,7 +62,7 @@ spec:
           command: 
               - "/usr/bin/gorse-server"
               - "--master-host"
-              - {{ printf "%s-master" (include "cloudpirates.names.fullname" .) | quote}}
+              - {{ printf "%s-master" (include "cloudpirates.fullname" .) | quote}}
               - "--master-port"
               - {{ .Values.master.service.ports.grpc | quote }}
               - "--http-host"

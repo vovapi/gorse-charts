@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "gorse.server.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "cloudpirates.labels.standard" . | nindent 4 }}
+  labels: {{- include "cloudpirates.labels" . | nindent 4 }}
     app.kubernetes.io/component: server
     {{- if .Values.commonLabels }}
     {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
@@ -50,5 +50,5 @@ spec:
       {{- else if eq .Values.server.service.type "ClusterIP" }}
       nodePort: null
       {{- end }}
-  selector: {{- include "cloudpirates.labels.matchLabels" . | nindent 4 }}
+  selector: {{- include "cloudpirates.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: server

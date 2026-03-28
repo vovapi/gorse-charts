@@ -42,7 +42,7 @@ APP VERSION: {{ .Chart.AppVersion }}
 2. Login dashboard with the following credentials below:
 
   echo Username: {{ .Values.gorse.dashboard.username }}
-  echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ include "cloudpirates.names.fullname" . }} -o jsonpath="{.data.dashboard-password}" | base64 -d)
+  echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ include "cloudpirates.fullname" . }} -o jsonpath="{.data.dashboard-password}" | base64 -d)
 
 {{- if .Values.server.ingress.enabled }}
 
@@ -81,7 +81,7 @@ APP VERSION: {{ .Chart.AppVersion }}
 
 4. Access RESTful APIs with the following key below:
 
-  echo APIKey: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ include "cloudpirates.names.fullname" . }} -o jsonpath="{.data.api-key}" | base64 -d)
+  echo APIKey: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ include "cloudpirates.fullname" . }} -o jsonpath="{.data.api-key}" | base64 -d)
 
 {{- include "cloudpirates.warnings.rollingTag" .Values.master.image }}
 {{- include "cloudpirates.warnings.rollingTag" .Values.server.image }}

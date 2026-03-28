@@ -2,9 +2,9 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ printf "data-%s-master" (include "cloudpirates.names.fullname" .) }}
+  name: {{ printf "data-%s-master" (include "cloudpirates.fullname" .) }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "cloudpirates.labels.matchLabels" . | nindent 4 }}
+  labels: {{- include "cloudpirates.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: master
   {{- if .Values.master.persistence.annotations }}
   annotations: {{- toYaml .Values.master.persistence.annotations | nindent 4 }}

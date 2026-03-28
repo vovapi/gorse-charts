@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s" (include "cloudpirates.names.fullname" .) }}
+  name: {{ printf "%s" (include "cloudpirates.fullname" .) }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "cloudpirates.labels.standard" . | nindent 4 }}
+  labels: {{- include "cloudpirates.labels" . | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}

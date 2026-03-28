@@ -3,7 +3,7 @@ kind: {{ .Values.master.kind }}
 metadata:
   name: {{ include "gorse.master.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "cloudpirates.labels.standard" . | nindent 4 }}
+  labels: {{- include "cloudpirates.labels" . | nindent 4 }}
     app.kubernetes.io/component: master
     {{- if .Values.commonLabels }}
     {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
@@ -14,10 +14,10 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLabels: {{- include "cloudpirates.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "cloudpirates.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: master
   {{- if (eq .Values.master.kind "StatefulSet") }}
-  serviceName: {{ printf "%s-master" (include "cloudpirates.names.fullname" .) }}
+  serviceName: {{ printf "%s-master" (include "cloudpirates.fullname" .) }}
   {{- end }}
   {{- if .Values.master.updateStrategy }}
   {{- if (eq .Values.master.kind "Deployment") }}
@@ -28,7 +28,7 @@ spec:
   {{- end }}
   template:
     metadata:
-      labels: {{- include "cloudpirates.labels.standard" . | nindent 8 }}
+      labels: {{- include "cloudpirates.labels" . | nindent 8 }}
         app.kubernetes.io/component: master
         {{- if .Values.master.podLabels }}
         {{- include "cloudpirates.tplvalues.render" ( dict "value" .Values.master.podLabels "context" $ ) | nindent 8 }}
@@ -45,9 +45,9 @@ spec:
       affinity: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.master.affinity "context" $) | nindent 8 }}
       {{- else }}
       affinity:
-        podAffinity: {{- include "cloudpirates.affinities.pods" (dict "type" .Values.master.podAffinityPreset "component" "master" "context" $) | nindent 10 }}
-        podAntiAffinity: {{- include "cloudpirates.affinities.pods" (dict "type" .Values.master.podAntiAffinityPreset "component" "master" "context" $) | nindent 10 }}
-        nodeAffinity: {{- include "cloudpirates.affinities.nodes" (dict "type" .Values.master.nodeAffinityPreset.type "key" .Values.master.nodeAffinityPreset.key "values" .Values.master.nodeAffinityPreset.values) | nindent 10 }}
+        podAffinity: {{- include "gorse.affinities.pods" (dict "type" .Values.master.podAffinityPreset "component" "master" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "gorse.affinities.pods" (dict "type" .Values.master.podAntiAffinityPreset "component" "master" "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "gorse.affinities.nodes" (dict "type" .Values.master.nodeAffinityPreset.type "key" .Values.master.nodeAffinityPreset.key "values" .Values.master.nodeAffinityPreset.values) | nindent 10 }}
       {{- end }}
       {{- if .Values.master.tolerations }}
       tolerations: {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.master.tolerations "context" $) | nindent 8 }}
@@ -71,24 +71,24 @@ spec:
             - name: GORSE_SERVER_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "cloudpirates.names.fullname" . }}
+                  name: {{ template "cloudpirates.fullname" . }}
                   key: api-key
             - name: GORSE_DASHBOARD_USER_NAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "cloudpirates.names.fullname" . }}
+                  name: {{ template "cloudpirates.fullname" . }}
                   key: dashboard-username
             - name: GORSE_DASHBOARD_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "cloudpirates.names.fullname" . }}
+                  name: {{ template "cloudpirates.fullname" . }}
                   key: dashboard-password
             - name: GORSE_DASHBOARD_AUTH_SERVER
               value: {{ .Values.gorse.dashboard.authServer }}
             - name: GORSE_OPENAI_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "cloudpirates.names.fullname" . }}
+                  name: {{ template "cloudpirates.fullname" . }}
                   key: openai-auth-token
             - name: GORSE_MASTER_PORT
               value: "{{ .Values.master.service.ports.grpc }}"
@@ -147,7 +147,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ printf "%s" (include "cloudpirates.names.fullname" .) }}
+            name: {{ printf "%s" (include "cloudpirates.fullname" .) }}
   {{- if not .Values.master.persistence.enabled }}
         - name: data
           {{- if .Values.master.persistence.medium }}
@@ -163,12 +163,12 @@ spec:
   {{- else if (eq .Values.master.kind "Deployment") }}
         - name: data
           persistentVolumeClaim:
-            claimName: {{ printf "data-%s-master" (include "cloudpirates.names.fullname" .) }}
+            claimName: {{ printf "data-%s-master" (include "cloudpirates.fullname" .) }}
   {{- else }}
   volumeClaimTemplates:
     - metadata:
         name: data
-        labels: {{- include "cloudpirates.labels.matchLabels" . | nindent 10 }}
+        labels: {{- include "cloudpirates.selectorLabels" . | nindent 10 }}
           app.kubernetes.io/component: master
         {{- if .Values.master.persistence.annotations }}
         annotations: {{- toYaml .Values.master.persistence.annotations | nindent 10 }}

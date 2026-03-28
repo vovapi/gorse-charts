@@ -4,7 +4,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "gorse.server.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
-  labels: {{- include "cloudpirates.labels.standard" . | nindent 4 }}
+  labels: {{- include "cloudpirates.labels" . | nindent 4 }}
     app.kubernetes.io/component: server
     {{- if .Values.commonLabels }}
     {{- include "cloudpirates.tplvalues.render" (dict "value" .Values.commonLabels "context" $) | nindent 4 }}
@@ -16,7 +16,7 @@ spec:
   scaleTargetRef:
     apiVersion: {{ include "cloudpirates.capabilities.deployment.apiVersion" . }}
     kind: StatefulSet
-    name: {{ printf "%s-server" (include "cloudpirates.names.fullname" .) }}
+    name: {{ printf "%s-server" (include "cloudpirates.fullname" .) }}
   minReplicas: {{ .Values.server.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.server.autoscaling.maxReplicas }}
   metrics:
