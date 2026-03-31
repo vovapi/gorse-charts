@@ -150,7 +150,7 @@ data["items"].map((item) => {
 
 | Name                                                   | Description                                                             | Value  |
 | ------------------------------------------------------ | ----------------------------------------------------------------------- | ------ |
-| `gorse.recommend.collaborative.enable`                 | Enable approximate collaborative filtering recommend using vector index | `true` |
+| `gorse.recommend.collaborative.type`                   | The type of collaborative filtering (none\|mf)                 | `mf`   |
 | `gorse.recommend.collaborative.fitPeriod`              | Time period for model fitting                                           | `60m`  |
 | `gorse.recommend.collaborative.fitEpoch`               | Number of epochs for model fitting                                      | `100`  |
 | `gorse.recommend.collaborative.optimizePeriod`         | Time period for hyperparameter optimization                             | `360m` |

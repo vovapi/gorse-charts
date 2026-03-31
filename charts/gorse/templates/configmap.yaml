@@ -207,6 +207,11 @@ data:
 
     [recommend.collaborative]
 
+    # The type of collaborative filtering. There are two types:
+    #   none: disable collaborative filtering.
+    #   mf: matrix factorization.
+    type = {{ .Values.gorse.recommend.collaborative.type | quote }}
+
     # The time period for model fitting. The default value is "60m".
     fit_period = {{ .Values.gorse.recommend.collaborative.fitPeriod | quote }}
 

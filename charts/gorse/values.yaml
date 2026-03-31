@@ -196,9 +196,9 @@ gorse:
     ## @section Collaborative filtering
     ##
     collaborative:
-      ## @param gorse.recommend.collaborative.enable Enable approximate collaborative filtering recommend using vector index
+      ## @param gorse.recommend.collaborative.type The type of collaborative filtering (none|mf)
       ##
-      enable: true
+      type: "mf"
       ## @param gorse.recommend.collaborative.fitPeriod Time period for model fitting
       ##
       fitPeriod: "60m"
