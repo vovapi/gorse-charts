@@ -195,6 +195,16 @@ data["items"].map((item) => {
 | `gorse.oidc.clientSecret` | OAuth application client secret      | `""`    |
 | `gorse.oidc.redirectUrl`  | OAuth redirect/callback URL          | `""`    |
 
+### Tracing configuration
+
+| Name                              | Description                                 | Value                              |
+| --------------------------------- | ------------------------------------------- | ---------------------------------- |
+| `gorse.tracing.enable`            | Enable tracing for REST APIs                | `false`                            |
+| `gorse.tracing.exporter`          | Tracing exporter type (zipkin\|otlp\|otlphttp) | `otlphttp`                      |
+| `gorse.tracing.collectorEndpoint` | Tracing collector endpoint                  | `http://localhost:4318/v1/traces` |
+| `gorse.tracing.sampler`           | Tracing sampler type (always\|never\|ratio) | `always`                           |
+| `gorse.tracing.ratio`             | Ratio used when sampler is set to ratio     | `1`                                |
+
 ### Gorse master node parameters
 
 | Name                                      | Description                                                                                                                      | Value                    |
